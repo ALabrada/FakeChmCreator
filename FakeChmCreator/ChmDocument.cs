@@ -19,7 +19,10 @@ namespace FakeChmCreator
             {
                 foreach (var item in section.Items)
                 {
-                    
+                    if (item.Heading != null)
+                    {
+                        
+                    }
                 }
             }
             throw new NotImplementedException();

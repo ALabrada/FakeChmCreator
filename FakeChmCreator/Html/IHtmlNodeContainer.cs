@@ -1,6 +1,6 @@
 ﻿using HtmlAgilityPack;
 
-namespace FakeChmCreator
+namespace FakeChmCreator.Html
 {
     /// <summary>
     /// Contract of a type that represents a node in a HTML page tree.

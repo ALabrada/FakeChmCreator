@@ -48,6 +48,7 @@
     <Compile Include="ChmDocument.cs" />
     <Compile Include="Html\HtmlTreeLevel.cs" />
     <Compile Include="Html\IHtmlNodeContainer.cs" />
+    <Compile Include="Html\ItemHeading.cs" />
     <Compile Include="IOwnedItem.cs" />
     <Compile Include="IOwnedItemCollection.cs" />
     <Compile Include="OwnedItemCollectionBase.cs" />

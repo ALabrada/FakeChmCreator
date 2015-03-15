@@ -27,12 +27,13 @@ namespace FakeChmCreator.Html
             }
         }
 
-        private readonly HtmlNode _node;
-
+        private readonly Lazy<ItemHeading> _heading; 
+        
         internal SectionItem(HtmlNode node)
         {
             Contract.Requires<ArgumentNullException>(node != null, "node");
-            _node = node;
+            Node = node;
+            _heading = new Lazy<ItemHeading>(() => ItemHeading.FindHeading(this));
         }
 
         /// <summary>
@@ -41,11 +42,21 @@ namespace FakeChmCreator.Html
         public ContentSection OwnerSection { get; private set; }
 
         /// <summary>
+        /// Gets the item's heading.
+        /// </summary>
+        public ItemHeading Heading
+        {
+            get { return _heading.Value; }
+        }
+
+        internal HtmlNode Node { get; private set; }
+
+        /// <summary>
         /// Gets the HTML node the instance represents.
         /// </summary>
         HtmlNode IHtmlNodeContainer.Node
         {
-            get { return _node; }
+            get { return Node; }
         }
 
         /// <summary>
@@ -54,7 +65,7 @@ namespace FakeChmCreator.Html
         /// <returns>An exact copy of the instance.</returns>
         public SectionItem CloneItem()
         {
-            return new SectionItem(_node.CloneNode(true));
+            return new SectionItem(Node.CloneNode(true));
         }
 
         /// <summary>
