@@ -16,7 +16,10 @@ namespace FakeChmCreator
             var chmNodes = new Stack<Tuple<int, Topic>>();
             foreach (var section in page.Content.Sections)
             {
-                
+                foreach (var item in section.Items)
+                {
+                    
+                }
             }
             throw new NotImplementedException();
         }

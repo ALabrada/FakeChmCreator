@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using HtmlAgilityPack;
 
@@ -27,11 +29,15 @@ namespace FakeChmCreator
         }
 
         private readonly HtmlNode _node;
+        private readonly SectionItem.ItemCollection _items;
 
         internal PageSection(HtmlNode node)
         {
             Contract.Requires<ArgumentNullException>(node != null, "node");
             _node = node;
+            _items = new SectionItem.ItemCollection(this);
+            foreach (var child in node.ChildNodes)
+                _items.Add(new SectionItem(child));
         }
 
         /// <summary>
@@ -75,6 +81,14 @@ namespace FakeChmCreator
         HtmlNode IHtmlNodeContainer.Node
         {
             get { return _node; }
+        }
+
+        /// <summary>
+        /// Gets the list of items in the section.
+        /// </summary>
+        public ICollection<SectionItem> Items
+        {
+            get { return _items; }
         }
     }
 }
