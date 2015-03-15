@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using HtmlAgilityPack;
 
-namespace FakeChmCreator
+namespace FakeChmCreator.Html
 {
     /// <summary>
     /// Represents the &lt;body/> section in a HTML  page.
     /// </summary>
     public class PageContent : IOwnedItem<Page>, IHtmlNodeContainer
     {
-        private readonly PageSection.SectionCollection _sections;
+        private readonly ContentSection.SectionCollection _sections;
         private readonly HtmlNode _node;
 
         internal PageContent(HtmlNode node, Page owner)
@@ -18,9 +18,9 @@ namespace FakeChmCreator
             Contract.Requires<ArgumentNullException>(node != null, "node");
             _node = node;
             OwnerPage = owner;
-            _sections = new PageSection.SectionCollection(this);
+            _sections = new ContentSection.SectionCollection(this);
             foreach (var child in node.ChildNodes)
-                _sections.Add(new PageSection(child));
+                _sections.Add(new ContentSection(child));
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace FakeChmCreator
         /// <summary>
         /// Gets the sections of the page content.
         /// </summary>
-        public ICollection<PageSection> Sections
+        public ICollection<ContentSection> Sections
         {
             get { return _sections; }
         }

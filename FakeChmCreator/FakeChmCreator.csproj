@@ -46,16 +46,16 @@
   <ItemGroup>
     <Compile Include="ChmContent.cs" />
     <Compile Include="ChmDocument.cs" />
-    <Compile Include="HtmlTreeLevel.cs" />
-    <Compile Include="IHtmlNodeContainer.cs" />
+    <Compile Include="Html\HtmlTreeLevel.cs" />
+    <Compile Include="Html\IHtmlNodeContainer.cs" />
     <Compile Include="IOwnedItem.cs" />
     <Compile Include="IOwnedItemCollection.cs" />
     <Compile Include="OwnedItemCollectionBase.cs" />
-    <Compile Include="PageContent.cs" />
-    <Compile Include="PageSection.cs" />
-    <Compile Include="SectionItem.cs" />
+    <Compile Include="Html\PageContent.cs" />
+    <Compile Include="Html\ContentSection.cs" />
+    <Compile Include="Html\SectionItem.cs" />
     <Compile Include="Topic.cs" />
-    <Compile Include="Page.cs" />
+    <Compile Include="Html\Page.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +63,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

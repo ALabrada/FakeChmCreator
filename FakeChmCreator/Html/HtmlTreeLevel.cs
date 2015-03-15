@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FakeChmCreator
+namespace FakeChmCreator.Html
 {
     abstract class HtmlTreeLevel<TOwner, TItem> : OwnedItemCollectionBase<TOwner, TItem>
         where TItem : class, IOwnedItem<TOwner>, IHtmlNodeContainer

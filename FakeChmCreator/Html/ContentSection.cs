@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using HtmlAgilityPack;
 
-namespace FakeChmCreator
+namespace FakeChmCreator.Html
 {
     /// <summary>
     /// Representation of a section in a DOC document.
     /// </summary>
-    public class PageSection : IOwnedItem<PageContent>, ICloneable, IHtmlNodeContainer
+    public class ContentSection : IOwnedItem<PageContent>, ICloneable, IHtmlNodeContainer
     {
-        internal class SectionCollection : HtmlTreeLevel<PageContent, PageSection>
+        internal class SectionCollection : HtmlTreeLevel<PageContent, ContentSection>
         {
             public SectionCollection(PageContent owner) : base(owner)
             {
             }
 
-            protected override void SetCommonOwner(PageSection item)
+            protected override void SetCommonOwner(ContentSection item)
             {
                 item.OwnerPage = Owner;
             }
 
-            protected override void ClearOwner(PageSection item)
+            protected override void ClearOwner(ContentSection item)
             {
                 item.OwnerPage = null;
             }
@@ -31,7 +30,7 @@ namespace FakeChmCreator
         private readonly HtmlNode _node;
         private readonly SectionItem.ItemCollection _items;
 
-        internal PageSection(HtmlNode node)
+        internal ContentSection(HtmlNode node)
         {
             Contract.Requires<ArgumentNullException>(node != null, "node");
             _node = node;
@@ -58,9 +57,9 @@ namespace FakeChmCreator
         /// </summary>
         /// <param name="copyContent">Whether to include a copy of the section's content in the new section instance.</param>
         /// <returns>An exact copy of the instance.</returns>
-        public PageSection CloneSection(bool copyContent = false)
+        public ContentSection CloneSection(bool copyContent = false)
         {
-            return new PageSection(_node.CloneNode(copyContent));
+            return new ContentSection(_node.CloneNode(copyContent));
         }
 
         /// <summary>

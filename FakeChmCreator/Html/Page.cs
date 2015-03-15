@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using HtmlAgilityPack;
 
-namespace FakeChmCreator
+namespace FakeChmCreator.Html
 {
     /// <summary>
     /// Abstraction of an HTML page.

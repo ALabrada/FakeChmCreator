@@ -2,17 +2,17 @@
 using System.Diagnostics.Contracts;
 using HtmlAgilityPack;
 
-namespace FakeChmCreator
+namespace FakeChmCreator.Html
 {
     /// <summary>
     /// Represents a child item in a section in the HTML tree.
     /// The item can be a text paragraph, a heading, a table, an image, among many other things that can be present in a DOC document.
     /// </summary>
-    public class SectionItem : IOwnedItem<PageSection>, ICloneable, IHtmlNodeContainer
+    public class SectionItem : IOwnedItem<ContentSection>, ICloneable, IHtmlNodeContainer
     {
-        internal class ItemCollection : HtmlTreeLevel<PageSection, SectionItem>
+        internal class ItemCollection : HtmlTreeLevel<ContentSection, SectionItem>
         {
-            public ItemCollection(PageSection owner) : base(owner)
+            public ItemCollection(ContentSection owner) : base(owner)
             {
             }
 
@@ -38,7 +38,7 @@ namespace FakeChmCreator
         /// <summary>
         /// Gets the section this item belongs to.
         /// </summary>
-        public PageSection OwnerSection { get; private set; }
+        public ContentSection OwnerSection { get; private set; }
 
         /// <summary>
         /// Gets the HTML node the instance represents.
@@ -72,7 +72,7 @@ namespace FakeChmCreator
         /// <summary>
         /// Gets the owner of the item.
         /// </summary>
-        PageSection IOwnedItem<PageSection>.Owner
+        ContentSection IOwnedItem<ContentSection>.Owner
         {
             get { return OwnerSection; }
         }
