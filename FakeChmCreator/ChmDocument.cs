@@ -14,10 +14,11 @@ namespace FakeChmCreator
             var page = Page.LoadFromFile(filePath);
             var whiteSpace = new Regex(@"(\s|(&nbsp;))+", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
             var chmNodes = new Stack<Tuple<int, Topic>>();
-            foreach (var section in page.Sections)
+            foreach (var section in page.Content.Sections)
             {
                 
             }
+            throw new NotImplementedException();
         }
     }
 }

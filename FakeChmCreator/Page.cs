@@ -11,8 +11,8 @@ namespace FakeChmCreator
     public class Page : ICloneable
     {
         private readonly HtmlDocument _document;
-        private readonly HtmlNode _body, _head;
-        private readonly PageSection.SectionList _sections;
+        private readonly HtmlNode _head;
+        private PageContent _content;
         private HtmlNode _titleNode;
 
         private Page(HtmlDocument document)
@@ -20,11 +20,9 @@ namespace FakeChmCreator
             _document = document;
             var html = _document.DocumentNode.ChildNodes["html"];
             _head = html.ChildNodes["head"];
-            _body = html.ChildNodes["body"];
             _titleNode = html.ChildNodes["title"];
-            _sections = new PageSection.SectionList(this);
-            foreach (var child in _body.ChildNodes)
-                _sections.Add(new PageSection(child));
+            var body = html.ChildNodes["body"];
+            Content = body == null ? null : new PageContent(body, this);
         }
 
         /// <summary>
@@ -51,11 +49,20 @@ namespace FakeChmCreator
         }
 
         /// <summary>
-        /// Gets the sections of the page content.
+        /// Gets the content of the HTML page.
         /// </summary>
-        public IList<PageSection> Sections
+        public PageContent Content
         {
-            get { return _sections; }
+            get { return _content; }
+            private set
+            {
+                var html = _document.DocumentNode.ChildNodes["html"];
+                if (_content != null)
+                    html.RemoveChild(_content.Node);
+                if (value != null)
+                    html.AppendChild(value.Node);
+                _content = value;
+            }
         }
 
         /// <summary>
@@ -81,12 +88,13 @@ namespace FakeChmCreator
         {
             var newDoc = new HtmlDocument();
             var newHead = _head.CloneNode(true);
-            var newBody = _body.CloneNode(copyContent);
             var newHtml = _document.DocumentNode.ChildNodes["html"].CloneNode(false);
             newHtml.AppendChild(newHead);
-            newHtml.AppendChild(newBody);
             newDoc.DocumentNode.AppendChild(newHtml);
-            return new Page(newDoc);
+            var newPage = new Page(newDoc);
+            var newBody = Content.CloneContent(newPage, copyContent);
+            newPage.Content = newBody;
+            return newPage;
         }
 
         /// <summary>

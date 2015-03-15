@@ -7,11 +7,11 @@ namespace FakeChmCreator
     /// <summary>
     /// Representation of a section in a DOC document.
     /// </summary>
-    public class PageSection : IOwnedItem<Page>, ICloneable
+    public class PageSection : IOwnedItem<PageContent>, ICloneable, IHtmlNodeContainer
     {
-        internal class SectionList : OwnedItemListBase<Page, PageSection>
+        internal class SectionCollection : HtmlTreeLevel<PageContent, PageSection>
         {
-            public SectionList(Page owner) : base(owner)
+            public SectionCollection(PageContent owner) : base(owner)
             {
             }
 
@@ -37,12 +37,12 @@ namespace FakeChmCreator
         /// <summary>
         /// Gets the page that owns the section.
         /// </summary>
-        public Page OwnerPage { get; private set; }
+        public PageContent OwnerPage { get; private set; }
 
         /// <summary>
         /// Gets the page that owns the section.
         /// </summary>
-        Page IOwnedItem<Page>.Owner
+        PageContent IOwnedItem<PageContent>.Owner
         {
             get { return OwnerPage; }
         }
@@ -67,6 +67,14 @@ namespace FakeChmCreator
         public object Clone()
         {
             return CloneSection(true);
+        }
+
+        /// <summary>
+        /// Gets the HTML node the instance represents.
+        /// </summary>
+        HtmlNode IHtmlNodeContainer.Node
+        {
+            get { return _node; }
         }
     }
 }

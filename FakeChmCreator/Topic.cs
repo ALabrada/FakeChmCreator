@@ -10,9 +10,9 @@ namespace FakeChmCreator
     /// </summary>
     public class Topic : IOwnedItem<Topic>
     {
-        class TopicList : OwnedItemListBase<Topic, Topic>
+        class TopicCollection : OwnedItemCollectionBase<Topic, Topic>
         {
-            public TopicList(Topic owner) : base(owner)
+            public TopicCollection(Topic owner) : base(owner)
             {
             }
 
@@ -27,14 +27,14 @@ namespace FakeChmCreator
             }
         }
 
-        private readonly TopicList _subTopics;
+        private readonly TopicCollection _subTopics;
 
         /// <summary>
         /// Creates an instance of <see cref="Topic"/>.
         /// </summary>
         public Topic()
         {
-            _subTopics = new TopicList(this);
+            _subTopics = new TopicCollection(this);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace FakeChmCreator
         /// <summary>
         /// Gets the sub-topics of this topic.
         /// </summary>
-        public IList<Topic> SubTopics { get { return _subTopics; } }
+        public ICollection<Topic> SubTopics { get { return _subTopics; } }
 
         /// <summary>
         /// Gets the owner of the topic.

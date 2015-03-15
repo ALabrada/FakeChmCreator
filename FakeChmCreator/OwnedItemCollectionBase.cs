@@ -6,31 +6,31 @@ using System.Diagnostics.Contracts;
 namespace FakeChmCreator
 {
     /// <summary>
-    /// Base implementation of <see cref="IOwnedItemList{TOwner,TItem}"/>.
+    /// Base implementation of <see cref="IOwnedItemCollection{TOwner,TItem}"/>.
     /// </summary>
     /// <typeparam name="TOwner">Type of the owner.</typeparam>
     /// <typeparam name="TItem">Type of the items.</typeparam>
-    public abstract class OwnedItemListBase<TOwner, TItem> : IOwnedItemList<TOwner, TItem> where TItem : class, IOwnedItem<TOwner> where TOwner : class
+    abstract class OwnedItemCollectionBase<TOwner, TItem> : IOwnedItemCollection<TOwner, TItem> where TItem : class, IOwnedItem<TOwner> where TOwner : class
     {
         protected IList<TItem> Items;
 
         /// <summary>
-        /// Creates an instance of <see cref="OwnedItemListBase{TOwner,TItem}"/>.
+        /// Creates an instance of <see cref="OwnedItemCollectionBase{TOwner,TItem}"/>.
         /// </summary>
         /// <param name="owner">Common owner.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="owner"/> is <see langword="null"/>.</exception>
-        protected OwnedItemListBase(TOwner owner) : this(owner, new List<TItem>())
+        protected OwnedItemCollectionBase(TOwner owner) : this(owner, new List<TItem>())
         {
         }
 
         /// <summary>
-        /// Creates an instance of <see cref="OwnedItemListBase{TOwner,TItem}"/>.
+        /// Creates an instance of <see cref="OwnedItemCollectionBase{TOwner,TItem}"/>.
         /// </summary>
         /// <param name="owner">Common owner.</param>
         /// <param name="items">Items collection.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="owner"/> or <paramref name="items"/> are <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="items"/> is not empty.</exception>
-        protected OwnedItemListBase(TOwner owner, IList<TItem> items)
+        protected OwnedItemCollectionBase(TOwner owner, IList<TItem> items)
         {
             Contract.Requires<ArgumentNullException>(items != null);
             Contract.Requires<ArgumentNullException>(owner != null);
@@ -81,7 +81,7 @@ namespace FakeChmCreator
         /// Do not add <see langword="null"/> values to the collection.
         /// </para>
         /// </remarks> 
-        public void Add(TItem item)
+        public virtual void Add(TItem item)
         {
             Contract.Requires<ArgumentNullException>(item != null, "item");
             Contract.Requires<ArgumentException>(item.Owner == null, "Cannot add the item because it already has an owner.");
@@ -99,7 +99,7 @@ namespace FakeChmCreator
         /// The owners of the items that are currently in the collection will be set to <see langword="null"/>.
         /// </para>
         /// </remarks>
-        public void Clear()
+        public virtual void Clear()
         {
             if (IsReadOnly)
                 throw new NotSupportedException("Cannot modify a read-only collection.");
@@ -139,7 +139,7 @@ namespace FakeChmCreator
         /// true if <paramref name="item"/> was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false. This method also returns false if <paramref name="item"/> is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </returns>
         /// <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
-        public bool Remove(TItem item)
+        public virtual bool Remove(TItem item)
         {
             if (item == null || !Items.Remove(item))
                 return false;
@@ -192,7 +192,7 @@ namespace FakeChmCreator
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="item"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Thrown when the <see cref="IOwnedItem{TOwner}.Owner"/> property of <paramref name="item"/> is not <see langword="null"/>.</exception>
-        public void Insert(int index, TItem item)
+        public virtual void Insert(int index, TItem item)
         {
             Contract.Requires<ArgumentNullException>(item != null, "item");
             Contract.Requires<ArgumentException>(item.Owner == null, "Cannot insert the item because it already has an owner.");
@@ -207,39 +207,12 @@ namespace FakeChmCreator
         /// <param name="index">The zero-based index of the item to remove.</param>
         /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
-        public void RemoveAt(int index)
+        public virtual void RemoveAt(int index)
         {
             var item = Items[index];
             Items.RemoveAt(index);
             ClearOwner(item);
             Contract.Assert(item.Owner == null);
-        }
-
-        /// <summary>
-        /// Gets or sets the element at the specified index.
-        /// </summary>
-        /// <returns>
-        /// The element at the specified index.
-        /// </returns>
-        /// <param name="index">The zero-based index of the element to get or set.</param>
-        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception>
-        /// <exception cref="T:System.NotSupportedException">The property is set and the <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException">Thrown when the <see cref="IOwnedItem{TOwner}.Owner"/> property of <paramref name="value"/> is not <see langword="null"/>.</exception>
-        public TItem this[int index]
-        {
-            get { return Items[index]; }
-            set
-            {
-                Contract.Requires<ArgumentNullException>(value != null, "value");
-                Contract.Requires<ArgumentException>(value.Owner == null, "Cannot insert the item because it already has an owner.");
-                var prevItem = Items[index];
-                ClearOwner(prevItem);
-                Contract.Assert(prevItem.Owner == null);
-                Items[index] = value;
-                SetCommonOwner(value);
-                Contract.Assert(value.Owner == Owner);
-            }
         }
 
         /// <summary>

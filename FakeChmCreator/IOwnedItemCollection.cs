@@ -7,7 +7,7 @@ namespace FakeChmCreator
     /// </summary>
     /// <typeparam name="TOwner">Type of the owner.</typeparam>
     /// <typeparam name="TItem">Type of the items.</typeparam>
-    public interface IOwnedItemList<out TOwner, TItem> : IList<TItem> where TItem : IOwnedItem<TOwner>
+    interface IOwnedItemCollection<out TOwner, TItem> : ICollection<TItem> where TItem : IOwnedItem<TOwner>
     {
         /// <summary>
         /// Gets the common owner of the items in the list.
