@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeChmCreator", "FakeChmCr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeChmCreator.Interop", "FakeChmCreator.Interop\FakeChmCreator.Interop.csproj", "{1F2E9E5A-351A-4B91-BA2A-EEEB7607F56A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeChmCreator.CmdLine", "FakeChmCreator.CmdLine\FakeChmCreator.CmdLine.csproj", "{E20A41FC-33C3-4F3C-9270-6D500E6C63A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{1F2E9E5A-351A-4B91-BA2A-EEEB7607F56A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F2E9E5A-351A-4B91-BA2A-EEEB7607F56A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F2E9E5A-351A-4B91-BA2A-EEEB7607F56A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E20A41FC-33C3-4F3C-9270-6D500E6C63A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E20A41FC-33C3-4F3C-9270-6D500E6C63A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E20A41FC-33C3-4F3C-9270-6D500E6C63A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E20A41FC-33C3-4F3C-9270-6D500E6C63A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
