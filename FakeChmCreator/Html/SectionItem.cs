@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace FakeChmCreator.Html
@@ -27,8 +28,8 @@ namespace FakeChmCreator.Html
             }
         }
 
-        private readonly Lazy<ItemHeading> _heading; 
-        
+        private readonly Lazy<ItemHeading> _heading;
+
         internal SectionItem(HtmlNode node)
         {
             Contract.Requires<ArgumentNullException>(node != null, "node");

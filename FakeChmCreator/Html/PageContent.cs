@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using HtmlAgilityPack;
 
 namespace FakeChmCreator.Html
@@ -66,6 +67,28 @@ namespace FakeChmCreator.Html
         HtmlNode IHtmlNodeContainer.Node
         {
             get { return _node; }
+        }
+
+        private IEnumerable<string> GetNodeIds(HtmlNode node)
+        {
+            if (node.HasAttributes)
+            {
+                var nameAttr = node.GetAttributeValue("name", null);
+                if (nameAttr != null)
+                    yield return nameAttr;
+            }
+            foreach (var child in node.ChildNodes)
+                foreach (var name in GetNodeIds(child))
+                    yield return name;
+        }
+
+        /// <summary>
+        /// Finds the IDs of all named nodes in the page's content.
+        /// </summary>
+        /// <returns>Sequence of node ID's.</returns>
+        public IEnumerable<string> GetNodeIds()
+        {
+            return GetNodeIds(Node);
         }
     }
 }

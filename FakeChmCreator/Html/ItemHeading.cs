@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace FakeChmCreator.Html
@@ -15,18 +16,29 @@ namespace FakeChmCreator.Html
     public class ItemHeading : IOwnedItem<SectionItem>
     {
         private readonly SectionItem _owner;
-        private readonly HtmlNode _node;
+        private readonly string _text;
+
+        private static readonly Regex WhiteSpace = new Regex(@"(\s|(&nbsp;))+",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Multiline);
 
         private ItemHeading(HtmlNode node, SectionItem owner)
         {
             _owner = owner;
-            _node = node;
+            _text = WhiteSpace.Replace(node.InnerText, " ");
         }
 
         /// <summary>
         /// Gets the level of the heading in the topic tree.
         /// </summary>
         public int Level { get; private set; }
+
+        /// <summary>
+        /// Gets the text of the heading suitable for representation in a topic.
+        /// </summary>
+        public string Text
+        {
+            get { return _text; }
+        }
 
         /// <summary>
         /// Checks if the given HTML node is a heading node.

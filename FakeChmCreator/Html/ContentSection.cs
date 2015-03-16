@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace FakeChmCreator.Html
@@ -29,14 +30,38 @@ namespace FakeChmCreator.Html
 
         private readonly HtmlNode _node;
         private readonly SectionItem.ItemCollection _items;
+        private static readonly Regex EmptyTextRegex = new Regex(@"^(\s|(&nbsp;))+$",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Multiline);
+
+        private readonly Lazy<string> _name; 
 
         internal ContentSection(HtmlNode node)
         {
             Contract.Requires<ArgumentNullException>(node != null, "node");
             _node = node;
+            _name = new Lazy<string>(() => _node.GetAttributeValue("class", null));
             _items = new SectionItem.ItemCollection(this);
             foreach (var child in node.ChildNodes)
                 _items.Add(new SectionItem(child));
+        }
+
+        /// <summary>
+        /// Gets whether the section contains any text.
+        /// </summary>
+        public bool IsEmpty
+        {
+            get
+            {
+                return EmptyTextRegex.IsMatch(_node.InnerText);
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the section.
+        /// </summary>
+        public string Name
+        {
+            get { return _name.Value; }
         }
 
         /// <summary>
