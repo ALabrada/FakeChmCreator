@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CLAP;
@@ -26,14 +28,8 @@ namespace FakeChmCreator.CmdLine
                 PrintTopics(subTopic, level + 1);
         }
 
-        [Verb(IsDefault = true, Description = "Prints the topic tree for the specified Microsoft Word document.")]
-        public static int ShowTopics([Required] [Description("Path of the document.")] string docPath,
-            [Description("Path of the target HTML file.")] string htmlPath)
+        private static ChmDocument DocToChm(string docPath, string htmlPath)
         {
-            if (string.IsNullOrWhiteSpace(docPath))
-                return ShowError(1, "The path of the document cannot be empty.");
-            if (!File.Exists(docPath))
-                return ShowError(1, "The specified document does not exist.");
             var isTempFile = false;
             if (htmlPath == null || !Directory.Exists(Path.GetDirectoryName(htmlPath) ?? string.Empty))
             {
@@ -51,13 +47,71 @@ namespace FakeChmCreator.CmdLine
             }
             catch (Exception exception)
             {
-                return ShowError(2, "An unexpected error was handled while converting the document to HTML:\n" + exception);
+                ShowError(2, "An unexpected error was handled while converting the document to HTML:\n" + exception);
+                return null;
             }
             var chm = new ChmDocument();
             chm.Load(htmlPath);
             if (isTempFile)
+            {
                 File.Delete(htmlPath);
+                var resDir = string.Format("{0}_files", Path.GetFileNameWithoutExtension(htmlPath));
+                if (Directory.Exists(resDir))
+                    Directory.Delete(resDir);
+            }
+            return chm;
+        }
+
+        [Verb(IsDefault = true, Description = "Prints the topic tree for the specified Microsoft Word document.", Aliases = "show")]
+        public static int ShowTopics([Required] [Description("Path of the document.")] string docPath,
+            [Description("Path of the target HTML file.")] string htmlPath)
+        {
+            if (string.IsNullOrWhiteSpace(docPath))
+                return ShowError(1, "The path of the document cannot be empty.");
+            if (!File.Exists(docPath))
+                return ShowError(1, "The specified document does not exist.");
+            var chm = DocToChm(docPath, htmlPath);
+            if (chm == null)
+                return 2;
             PrintTopics(chm.Content.Root);
+            return 0;
+        }
+
+        private static void SaveTopics(Topic topic, string dirPath, Stack<int> levels)
+        {
+            var fileName = string.Format("H{0}.html", string.Join(".", from i in levels.Reverse() select i + 1),
+                topic.Name);
+            if (levels.Count > 0)
+            {
+                var filePath = Path.Combine(dirPath, fileName);
+                topic.Content.Save(filePath);
+                Console.WriteLine("Saved {0} ({1}).", fileName, topic.Name);
+            }
+            foreach (var item in topic.SubTopics.Select((t, i) => new {Topic = t, Index = i}))
+            {
+                levels.Push(item.Index);
+                SaveTopics(item.Topic, dirPath, levels);
+                levels.Pop();
+            }
+        }
+
+        [Verb(Description = "Saves the topic tree in the specified directory.", Aliases = "save")]
+        public static int SaveTopics([Required] [Description("Path of the document.")][Aliases("doc")] string docPath,
+            [Description("Path of the target HTML file.")][Aliases("html")] string htmlPath,
+            [Required] [Description("Path of the destination directory")][Aliases("dir")] string dirPath)
+        {
+            if (string.IsNullOrWhiteSpace(docPath))
+                return ShowError(1, "The path of the document cannot be empty.");
+            if (!File.Exists(docPath))
+                return ShowError(1, "The specified document does not exist.");
+            if (string.IsNullOrWhiteSpace(dirPath))
+                return ShowError(1, "The path of the output directory cannot be empty.");
+            if (Directory.CreateDirectory(dirPath) == null)
+                return ShowError(1, "Could not create the output directory. Check your write permissions.");
+            var chm = DocToChm(docPath, htmlPath);
+            if (chm == null)
+                return 2;
+            SaveTopics(chm.Content.Root, dirPath, new Stack<int>());
             return 0;
         }
     }

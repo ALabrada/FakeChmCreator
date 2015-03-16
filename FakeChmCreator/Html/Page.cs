@@ -86,6 +86,17 @@ namespace FakeChmCreator.Html
         }
 
         /// <summary>
+        /// Saves an HTML page to a file.
+        /// </summary>
+        /// <param name="filePath">Path of the file</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is empty.</exception>
+        public void Save(string filePath)
+        {
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(filePath), "filePath");
+            _document.Save(filePath);
+        }
+
+        /// <summary>
         /// Makes an exact copy of the page.
         /// </summary>
         /// <param name="copyContent">Whether to include a copy of the page's content in the new instance.</param>

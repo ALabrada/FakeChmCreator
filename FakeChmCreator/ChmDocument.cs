@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Diagnostics.Contracts;
 using FakeChmCreator.Html;
 
 namespace FakeChmCreator
@@ -11,6 +11,7 @@ namespace FakeChmCreator
 
         public void Load(string filePath)
         {
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(filePath));
             Content = new ChmContent();
             var page = Page.LoadFromFile(filePath);
             var index = new Dictionary<string, Topic>();
@@ -66,6 +67,7 @@ namespace FakeChmCreator
                 // Changing title
                 newPage.Title = prevTopic.Name;
                 // Adding the topic to the tree
+                prevTopic.Content = newPage;
                 chmNodes.Peek().Item2.SubTopics.Add(prevTopic);
                 chmNodes.Push(pair);
                 // Updating index

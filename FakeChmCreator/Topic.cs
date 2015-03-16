@@ -57,7 +57,7 @@ namespace FakeChmCreator
         /// <summary>
         /// Gets or sets the content of the topic.
         /// </summary>
-        public Page Content { get; set; }
+        public Page Content { get; internal set; }
 
         /// <summary>
         /// Gets the sub-topics of this topic.
