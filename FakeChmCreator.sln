@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeChmCreator", "FakeChmCreator\FakeChmCreator.csproj", "{78ABE228-4E96-48B9-ABA0-EB208B656E9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeChmCreator.Interop", "FakeChmCreator.Interop\FakeChmCreator.Interop.csproj", "{1F2E9E5A-351A-4B91-BA2A-EEEB7607F56A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{78ABE228-4E96-48B9-ABA0-EB208B656E9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78ABE228-4E96-48B9-ABA0-EB208B656E9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78ABE228-4E96-48B9-ABA0-EB208B656E9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F2E9E5A-351A-4B91-BA2A-EEEB7607F56A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F2E9E5A-351A-4B91-BA2A-EEEB7607F56A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F2E9E5A-351A-4B91-BA2A-EEEB7607F56A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F2E9E5A-351A-4B91-BA2A-EEEB7607F56A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
