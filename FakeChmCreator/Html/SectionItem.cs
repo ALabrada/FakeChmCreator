@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
@@ -14,6 +15,10 @@ namespace FakeChmCreator.Html
         internal class ItemCollection : HtmlTreeLevel<ContentSection, SectionItem>
         {
             public ItemCollection(ContentSection owner) : base(owner)
+            {
+            }
+
+            public ItemCollection(ContentSection owner, IEnumerable<SectionItem> items) : base(owner, items)
             {
             }
 

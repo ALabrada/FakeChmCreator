@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
@@ -14,6 +15,10 @@ namespace FakeChmCreator.Html
         internal class SectionCollection : HtmlTreeLevel<PageContent, ContentSection>
         {
             public SectionCollection(PageContent owner) : base(owner)
+            {
+            }
+
+            public SectionCollection(PageContent owner, IEnumerable<ContentSection> items) : base(owner, items)
             {
             }
 
@@ -40,9 +45,7 @@ namespace FakeChmCreator.Html
             Contract.Requires<ArgumentNullException>(node != null, "node");
             _node = node;
             _name = new Lazy<string>(() => _node.GetAttributeValue("class", null));
-            _items = new SectionItem.ItemCollection(this);
-            foreach (var child in node.ChildNodes)
-                _items.Add(new SectionItem(child));
+            _items = new SectionItem.ItemCollection(this, node.ChildNodes.Select(c => new SectionItem(c)));
         }
 
         /// <summary>

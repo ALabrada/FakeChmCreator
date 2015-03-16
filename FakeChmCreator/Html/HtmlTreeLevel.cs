@@ -10,8 +10,10 @@ namespace FakeChmCreator.Html
         {
         }
 
-        protected HtmlTreeLevel(TOwner owner, IList<TItem> items) : base(owner, items)
+        protected HtmlTreeLevel(TOwner owner, IEnumerable<TItem> items) : this(owner)
         {
+            foreach (var item in items)
+                base.Add(item);
         }
 
         public override void Add(TItem item)

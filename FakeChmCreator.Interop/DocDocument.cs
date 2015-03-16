@@ -24,7 +24,7 @@ namespace FakeChmCreator.Interop
             Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(filePath), "filePath");
             Contract.Requires<FileNotFoundException>(File.Exists(filePath), "filePath");
             _application = new Application {Visible = true};
-            _document = _application.Documents.OpenNoRepairDialog(filePath);
+            _document = _application.Documents.Open(filePath);
         }
 
         /// <summary>

@@ -19,9 +19,7 @@ namespace FakeChmCreator.Html
             Contract.Requires<ArgumentNullException>(node != null, "node");
             _node = node;
             OwnerPage = owner;
-            _sections = new ContentSection.SectionCollection(this);
-            foreach (var child in node.ChildNodes)
-                _sections.Add(new ContentSection(child));
+            _sections = new ContentSection.SectionCollection(this, node.ChildNodes.Select(c => new ContentSection(c)));
         }
 
         /// <summary>

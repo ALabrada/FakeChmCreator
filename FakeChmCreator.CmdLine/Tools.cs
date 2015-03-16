@@ -34,11 +34,13 @@ namespace FakeChmCreator.CmdLine
                 return ShowError(1, "The path of the document cannot be empty.");
             if (!File.Exists(docPath))
                 return ShowError(1, "The specified document does not exist.");
+            var isTempFile = false;
             if (htmlPath == null || !Directory.Exists(Path.GetDirectoryName(htmlPath) ?? string.Empty))
             {
                 if (htmlPath != null)
                     ShowWarning("Could not find the directory of the target path. Using the default target path.");
                 htmlPath = Path.GetTempFileName();
+                isTempFile = true;
             }
             try
             {
@@ -53,6 +55,8 @@ namespace FakeChmCreator.CmdLine
             }
             var chm = new ChmDocument();
             chm.Load(htmlPath);
+            if (isTempFile)
+                File.Delete(htmlPath);
             PrintTopics(chm.Content.Root);
             return 0;
         }

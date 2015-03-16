@@ -20,7 +20,7 @@ namespace FakeChmCreator.Html
             _document = document;
             var html = _document.DocumentNode.ChildNodes["html"];
             _head = html.ChildNodes["head"];
-            _titleNode = html.ChildNodes["title"];
+            _titleNode = _head.ChildNodes["title"];
             var body = html.ChildNodes["body"];
             Content = body == null ? null : new PageContent(body, this);
         }
@@ -33,6 +33,7 @@ namespace FakeChmCreator.Html
             get { return _titleNode == null ? null : _titleNode.InnerText; }
             set
             {
+                if (Title == value) return;
                 if (string.IsNullOrWhiteSpace(value))
                 {
                     _head.ChildNodes.Remove(_titleNode);
@@ -40,10 +41,15 @@ namespace FakeChmCreator.Html
                 }
                 else
                 {
-                    var ti = _head.ChildNodes.IndexOf(_titleNode);
-                    _head.ChildNodes.RemoveAt(ti);
-                    _titleNode = HtmlNode.CreateNode(string.Format("<title>{0}</title>", value));
-                    _head.ChildNodes.Insert(ti, _titleNode);
+                    var newNode = HtmlNode.CreateNode(string.Format("<title>{0}</title>", value));
+                    if (_titleNode == null)
+                        _head.ChildNodes.Add(_titleNode = newNode);
+                    else
+                    {
+                        var ti = _head.ChildNodes.IndexOf(_titleNode);
+                        _head.ChildNodes.RemoveAt(ti);
+                        _head.ChildNodes.Insert(ti, _titleNode = newNode);
+                    }
                 }
             }
         }
