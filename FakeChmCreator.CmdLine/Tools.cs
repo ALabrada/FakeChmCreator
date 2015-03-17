@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,7 +27,7 @@ namespace FakeChmCreator.CmdLine
                 PrintTopics(subTopic, level + 1);
         }
 
-        private static ChmDocument DocToChm(string docPath, string htmlPath)
+        private static ChmDocument DocToChm(string docPath, string htmlPath, bool keepHtml = false, bool keepResources = false)
         {
             var isTempFile = false;
             if (htmlPath == null || !Directory.Exists(Path.GetDirectoryName(htmlPath) ?? string.Empty))
@@ -52,13 +51,14 @@ namespace FakeChmCreator.CmdLine
             }
             var chm = new ChmDocument();
             chm.Load(htmlPath);
-            if (isTempFile)
-            {
+            var resDir = string.Format("{0}_files", Path.GetFileNameWithoutExtension(htmlPath));
+            var parentDir = Path.GetDirectoryName(htmlPath);
+            if (parentDir != null)
+                resDir = Path.Combine(parentDir, resDir);
+            if (isTempFile || !keepHtml)
                 File.Delete(htmlPath);
-                var resDir = string.Format("{0}_files", Path.GetFileNameWithoutExtension(htmlPath));
-                if (Directory.Exists(resDir))
-                    Directory.Delete(resDir);
-            }
+            if ((isTempFile || !keepResources) && Directory.Exists(resDir))
+                Directory.Delete(resDir, true);
             return chm;
         }
 
@@ -70,7 +70,7 @@ namespace FakeChmCreator.CmdLine
                 return ShowError(1, "The path of the document cannot be empty.");
             if (!File.Exists(docPath))
                 return ShowError(1, "The specified document does not exist.");
-            var chm = DocToChm(docPath, htmlPath);
+            var chm = DocToChm(docPath, htmlPath, true);
             if (chm == null)
                 return 2;
             PrintTopics(chm.Content.Root);
@@ -97,8 +97,8 @@ namespace FakeChmCreator.CmdLine
 
         [Verb(Description = "Saves the topic tree in the specified directory.", Aliases = "save")]
         public static int SaveTopics([Required] [Description("Path of the document.")][Aliases("doc")] string docPath,
-            [Description("Path of the target HTML file.")][Aliases("html")] string htmlPath,
-            [Required] [Description("Path of the destination directory")][Aliases("dir")] string dirPath)
+            [Required] [Description("Path of the destination directory")][Aliases("dir")] string dirPath,
+            [Description("Delete the source HTML file when the operation completes?")][Aliases("del")][DefaultValue(false)] bool clean)
         {
             if (string.IsNullOrWhiteSpace(docPath))
                 return ShowError(1, "The path of the document cannot be empty.");
@@ -106,9 +106,17 @@ namespace FakeChmCreator.CmdLine
                 return ShowError(1, "The specified document does not exist.");
             if (string.IsNullOrWhiteSpace(dirPath))
                 return ShowError(1, "The path of the output directory cannot be empty.");
-            if (Directory.CreateDirectory(dirPath) == null)
-                return ShowError(1, "Could not create the output directory. Check your write permissions.");
-            var chm = DocToChm(docPath, htmlPath);
+            if (!Directory.Exists(dirPath))
+                try
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+                catch
+                {
+                    return ShowError(1, "Could not create the output directory. Check your write permissions.");
+                }
+                
+            var chm = DocToChm(docPath, Path.Combine(dirPath, Path.GetFileNameWithoutExtension(docPath)) + ".html", !clean, true);
             if (chm == null)
                 return 2;
             SaveTopics(chm.Content.Root, dirPath, new Stack<int>());
