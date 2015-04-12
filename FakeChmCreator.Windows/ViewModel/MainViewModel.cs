@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using FakeChmCreator.Windows.Model;
+using GalaSoft.MvvmLight.Command;
 
 namespace FakeChmCreator.Windows.ViewModel
 {
@@ -61,6 +62,9 @@ namespace FakeChmCreator.Windows.ViewModel
                     WelcomeTitle = item.Title;
                 });
         }
+
+        private readonly ChmDocumentViewModel _document = new ChmDocumentViewModel();
+        public ChmDocumentViewModel Document { get { return _document; } }
 
         ////public override void Cleanup()
         ////{

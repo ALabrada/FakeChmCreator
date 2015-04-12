@@ -125,5 +125,10 @@ namespace FakeChmCreator.Html
         {
             return ClonePage(true);
         }
+
+        public override string ToString()
+        {
+            return _document.DocumentNode.OuterHtml;
+        }
     }
 }

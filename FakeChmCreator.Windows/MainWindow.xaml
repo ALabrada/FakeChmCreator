@@ -5,6 +5,8 @@
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:ignore="http://www.ignore.com"
                      xmlns:fluent="urn:fluent-ribbon"
+                     xmlns:fakeChmCreator="clr-namespace:FakeChmCreator;assembly=FakeChmCreator"
+                     xmlns:wpf="clr-namespace:TheArtOfDev.HtmlRenderer.WPF;assembly=HtmlRenderer.WPF"
                      mc:Ignorable="d ignore"
                      Height="300"
                      Width="300"
@@ -20,12 +22,17 @@
     </fluent:RibbonWindow.Resources>
     
     <Grid x:Name="LayoutRoot">
-        <!--<Grid.RowDefinitions>
+        <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-        </Grid.RowDefinitions>-->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-        <fluent:Ribbon>
+        <fluent:Ribbon Grid.ColumnSpan="3">
             <fluent:Ribbon.Menu>
                 <fluent:Backstage>
                     <fluent:BackstageTabControl>
@@ -34,9 +41,11 @@
                     </fluent:BackstageTabControl>
                 </fluent:Backstage>
             </fluent:Ribbon.Menu>
-            <!--<fluent:RibbonTabItem>
-
-            </fluent:RibbonTabItem>-->
+            <fluent:RibbonTabItem Header="Start">
+                <fluent:RibbonGroupBox>
+                    <Button Content="Add Document" Command="{Binding Document.AddDocDocumentCommand}"/>
+                </fluent:RibbonGroupBox>
+            </fluent:RibbonTabItem>
         </fluent:Ribbon>
 
         <!--<TextBlock Grid.Row="1" 
@@ -47,6 +56,18 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    TextWrapping="Wrap" />-->
+        <TreeView Name="Index" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Document.Topics}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type fakeChmCreator:Topic}" ItemsSource="{Binding SubTopics}">
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+        <GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Black" 
+                      ShowsPreview="True" Width="2"/>
+        
+        <wpf:HtmlPanel Grid.Row="1" Grid.Column="2" Text="{Binding ElementName=Index, Path=SelectedItem.(fakeChmCreator:Topic.Content)}"/>
 
     </Grid>
 </fluent:RibbonWindow>
